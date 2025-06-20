@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OPD Appointment Scheduler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background: #2980b9;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<h1>AI-Powered OPD Appointment Scheduler</h1>
+
+<form id="appointmentForm">
+  <label for="name">Patient Name:</label>
+  <input type="text" id="name" required>
+
+  <label for="time">Preferred Time:</label>
+  <select id="time">
+    <option value="08:00">08:00</option>
+    <option value="09:00">09:00</option>
+    <option value="10:00">10:00</option>
+    <option value="11:00">11:00</option>
+    <option value="12:00">12:00</option>
+    <option value="13:00">13:00</option>
+    <option value="14:00">14:00</option>
+    <option value="15:00">15:00</option>
+  </select>
+
+  <label for="doctor">Select Doctor:</label>
+  <select id="doctor">
+    <!-- Populated dynamically based on time -->
+  </select>
+
+  <label for="duration">Consultation Duration (minutes):</label>
+  <select id="duration">
+    <option value="10">10</option>
+    <option value="15">15</option>
+    <option value="20">20</option>
+  </select>
+
+  <button type="submit">Book Appointment</button>
+</form>
+
+<h2>📋 Scheduled Appointments</h2>
+<table id="scheduleTable">
+  <thead>
+    <tr>
+      <th>Patient Name</th>
+      <th>Doctor</th>
+      <th>Time</th>
+      <th>Duration</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  const form = document.getElementById('appointmentForm');
+  const tableBody = document.querySelector('#scheduleTable tbody');
+  const timeSelect = document.getElementById('time');
+  const doctorSelect = document.getElementById('doctor');
+
+  // Define doctor availability
+  const doctorAvailability = {
+    "Dr. A. Kumar": ["08:00", "09:00", "10:00"],
+    "Dr. B. Reddy": ["09:00", "10:00", "11:00", "12:00"],
+    "Dr. C. Sharma": ["11:00", "12:00", "13:00", "14:00"],
+    "Dr. D. Thomas": ["13:00", "14:00", "15:00"]
+  };
+
+  // Update doctor list based on selected time
+  function updateDoctorOptions(selectedTime) {
+    doctorSelect.innerHTML = ""; // Clear previous options
+
+    const availableDoctors = Object.entries(doctorAvailability)
+      .filter(([doctor, times]) => times.includes(selectedTime))
+      .map(([doctor]) => doctor);
+
+    if (availableDoctors.length === 0) {
+      const option = document.createElement("option");
+      option.text = "No doctors available at this time";
+      option.disabled = true;
+      doctorSelect.appendChild(option);
+    } else {
+      availableDoctors.forEach(doctor => {
+        const option = document.createElement("option");
+        option.value = doctor;
+        option.text = doctor;
+        doctorSelect.appendChild(option);
+      });
+    }
+  }
+
+  // On page load, set initial doctor list
+  updateDoctorOptions(timeSelect.value);
+
+  // When time changes, update doctor list
+  timeSelect.addEventListener('change', () => {
+    updateDoctorOptions(timeSelect.value);
+  });
+
+  // Handle form submission
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const doctor = document.getElementById('doctor').value;
+    const time = document.getElementById('time').value;
+    const duration = document.getElementById('duration').value;
+
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `<td>${name}</td><td>${doctor}</td><td>${time}</td><td>${duration} min</td>`;
+    tableBody.appendChild(newRow);
+
+    form.reset();
+    updateDoctorOptions(timeSelect.value); // Reset doctor dropdown
+  });
+</script>
+
+</body>
+</html>
