@@ -1,7 +1,7 @@
 # AI-Powered-OPD-Appointment-Scheduler
 A smart, AI-integrated appointment management system designed to optimize patient scheduling in Outpatient Departments (OPDs). This project combines machine learning (KMeans clustering) and real-time scheduling logic to minimize overlaps, reduce idle time, and enhance operational efficiency in hospitals and clinics.
 
-🔍 Key Features
+🔍 ### Key Features
 AI-Based Slot Prediction: Uses clustering to group appointment durations and identify optimal time slots.
 Smart Scheduler: Dynamically allocates appointments to avoid conflicts and overlaps.
 Interactive Frontend: Clean and responsive UI for booking appointments, including doctor and time slot selection.
